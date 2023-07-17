@@ -3,10 +3,11 @@ const app = express();
 const PORT = 3003;
 
 const OrderRouter = require('./routes/menus.route');
+const reviewRouter = require('./routes/review.routes');
 
 app.use(express.json());
 
-app.use('/', OrderRouter);
+app.use('/', [OrderRouter, reviewRouter]);
 
 app.listen(PORT, () => {
   console.log(PORT, '포트 번호로 서버가 실행되었습니다.');
