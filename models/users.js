@@ -10,13 +10,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
 
-      // 1. Users 모델에서
-      this.hasOne(models.UserInfos, {
-        // 2. Posts 모델에게 1:N 관계 설정을 합니다.
-        sourceKey: 'userId', // 3. Users 모델의 userId 컬럼을
-        foreignKey: 'UserId', // 4. Posts 모델의 UserId 컬럼과 연결합니다.
-      });
-
       this.hasMany(models.Stores, {
         // 2. Posts 모델에게 1:N 관계 설정을 합니다.
         sourceKey: 'userId', // 3. Users 모델의 userId 컬럼을
@@ -60,6 +53,10 @@ module.exports = (sequelize, DataTypes) => {
       password: {
         allowNull: false, // NOT NULL
         type: DataTypes.STRING,
+      },
+      point: {
+        defaultValue: 0,
+        type: DataTypes.INTEGER,
       },
       createdAt: {
         allowNull: false, // NOT NULL
