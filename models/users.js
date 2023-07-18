@@ -58,6 +58,10 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 0,
         type: DataTypes.INTEGER,
       },
+      role: {
+        defaultValue: 0,
+        type: DataTypes.INTEGER,
+      },
       createdAt: {
         allowNull: false, // NOT NULL
         type: DataTypes.DATE,
