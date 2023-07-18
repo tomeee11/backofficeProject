@@ -10,39 +10,41 @@ class StoresController {
 
   getStore = async (req, res, next) => {
     const { storeId } = req.params;
-    const { status, message, stores } = await this.storesService.findStore(
+    const { status, message, stores } = await this.storesService.findstore(
       storeId
     );
     res.status(status).json({ message, stores });
   };
 
   createStore = async (req, res, next) => {
-    const { storename } = req.body;
-    const { userId } = res.locals;
+    const { storeName } = req.body;
+    const { userId } = res.locals.user;
+    console.log(userId);
+
     // 서비스 계층에 구현된 createPost 로직을 실행합니다.
     const { status, message } = await this.storesService.createStore(
       userId,
-      storename
+      storeName
     );
 
     res.status(status).json({ message });
   };
 
-  updateStore = async (req, res, next) => {
+  updatestore = async (req, res, next) => {
     const { storeId } = req.params;
-    const { storename } = req.body;
-    const { userId } = res.locals;
-    const { status, message } = await this.storesService.updateStore(
+    const { storeName } = req.body;
+    const { userId } = res.locals.user;
+    const { status, message } = await this.storesService.updatestore(
       storeId,
       userId,
-      storename
+      storeName
     );
     res.status(status).json({ message });
   };
 
   deleteStore = async (req, res, next) => {
     const { storeId } = req.params;
-    const { userId } = res.locals;
+    const { userId } = res.locals.user;
     const { status, message } = await this.storesService.deleteStore(
       storeId,
       userId

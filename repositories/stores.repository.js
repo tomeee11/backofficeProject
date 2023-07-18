@@ -5,15 +5,15 @@ class StoresRepository {
     const stores = await Stores.findAll();
     return stores;
   };
-  createStore = async (storename, userId) => {
-    await stores.create({ UserId: userId, storename });
+  createStore = async (userId, storeName) => {
+    await Stores.create({ UserId: userId, storeName });
   };
-  findStore = async storeId => {
-    const stores = await Stores.findOne({ where: { storeId } });
+  findstore = async userId => {
+    const stores = await Stores.findOne({ where: { UserId: userId } });
     return stores;
   };
-  updateStore = async (storeId, storename) => {
-    await Stores.update({ storename }, { where: { storeId } });
+  updatestore = async (storeId, storeName) => {
+    await Stores.update({ storeName }, { where: { storeId } });
   };
   deleteStore = async storeId => {
     await Stores.destroy({

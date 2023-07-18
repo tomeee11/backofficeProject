@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const storesRouter = require('./stores.routes');
-router.use('/stores/', storesRouter);
+router.use('/store', storesRouter);
 
 const menusRouter = require('./menus.routes');
 router.use('/', menusRouter);
