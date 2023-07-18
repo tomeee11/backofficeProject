@@ -1,4 +1,4 @@
-const StoresRepository = require('../repositories/posts.repository');
+const StoresRepository = require('../repositories/stores.repository');
 
 class StoresService {
   storesRepository = new StoresRepository();

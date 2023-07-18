@@ -7,10 +7,13 @@ router.use('/stores/', storesRouter);
 const menusRouter = require('./menus.routes');
 router.use('/menus/', menusRouter);
 
-const ordersRouter = require('./orders.routes');
-router.use('/orders/', ordersRouter);
+const userRouter = require('./users.route');
+router.use('/', userRouter);
 
-const reviewsRouter = require('./reviews.routes');
-router.use('/reviews/', reviewsRouter);
+// const ordersRouter = require('./orders.routes');
+// router.use('/orders/', ordersRouter);
+
+// const reviewsRouter = require('./reviews.routes');
+// router.use('/reviews/', reviewsRouter);
 
 module.exports = router;
