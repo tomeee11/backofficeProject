@@ -28,8 +28,8 @@ class ReviewRepository {
   //       ],
   //     });
 
-  //     return review;
-  //   };
+  //   return review;
+  // };
 
   // store 존재 여부를 위해 storeId 기준으로 조회
   //   findStoreId = async storeId => {

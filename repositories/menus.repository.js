@@ -12,30 +12,32 @@ class MenusRepository {
     return createmenu;
   };
 
-  findAllMenu = async stordId => {
+  findOneMenu = async menuId => {
+    const findOneMenu = await Menus.findOne({
+      where: { menuId },
+    });
+    return findOneMenu;
+  };
+
+  findAllMenu = async storeId => {
     const findallmenu = await Menus.findAll({
-      where: { stordId },
-      include: [{ Users }, { Stores }],
+      where: { StoreId: storeId },
+      // include: [{ model: Users }, { model: Stores }],
     });
     return findallmenu;
   };
 
-  findOneMenu = async storeId => {
-    const findonemenu = await Menus.findOne({ where: { storeId } });
-    return findonemenu;
-  };
-
   updateMenu = async (storeId, menuId, image, name, point) => {
     const updatemenu = await Menus.update(
-      { name, point, image },
-      { where: { [Op.and]: [{ storeId }, { menuId }] } }
+      { menuName: name, menuPoint: point, menuImage: image },
+      { where: { [Op.and]: [{ StoreId: storeId }, { menuId: menuId }] } }
     );
     return updatemenu;
   };
 
   destroyMenu = async (storeId, menuId) => {
     const destroymenu = await Menus.destroy({
-      where: { [Op.and]: [{ storeId }, { menuId }] },
+      where: { [Op.and]: [{ StoreId: storeId }, { menuId: menuId }] },
     });
     return destroymenu;
   };
