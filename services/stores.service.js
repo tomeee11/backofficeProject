@@ -1,4 +1,4 @@
-const StoresRepository = require('../repositories/posts.repository');
+const StoresRepository = require('../repositories/stores.repository');
 
 class StoresService {
   storesRepository = new StoresRepository();
@@ -10,7 +10,8 @@ class StoresService {
       const stores = allStore.map(post => {
         return {
           storeId: post.storeId,
-          storename: post.storename,
+          storeName: post.storeName,
+          UserId: post.UserId,
           createdAt: post.createdAt,
           updatedAt: post.updatedAt,
         };
@@ -28,7 +29,7 @@ class StoresService {
       };
     }
   };
-  findStore = async storeId => {
+  findstore = async storeId => {
     try {
       const store = await this.storesRepository.findStore(storeId);
       if (!store) {
@@ -40,7 +41,7 @@ class StoresService {
       const stores = {
         storeId: store.null,
         UserId: store.UserId,
-        storename: store.storename,
+        storeName: store.storeName,
         createdAt: store.createdAt,
         updatedAt: store.updatedAt,
       };
@@ -58,27 +59,27 @@ class StoresService {
     }
   };
 
-  createStore = async (userId, storename) => {
+  createStore = async (userId, storeName) => {
     try {
-      const store = await this.storesRepository.findStore(storename, userId);
+      const store = await this.storesRepository.findStore(userId);
 
-      if (store[0]) {
+      if (store != null) {
         return {
           status: 404,
           message: '사장님의 가게가 이미 존재합니다',
         };
       }
 
-      const newstore = await this.storesRepository.createPost(
+      const newstore = await this.storesRepository.createStore(
         userId,
-        storename
+        storeName
       );
 
       const stores = newstore.map(z => {
         return {
           storeId: z.storeId,
           UserId: z.UserId,
-          storename: z.storename,
+          storeName: z.storeName,
           createdAt: z.createdAt,
           updatedAt: z.updatedAt,
         };
@@ -97,17 +98,17 @@ class StoresService {
     }
   };
 
-  updateStore = async (storeId, userId, storename) => {
+  updatestore = async (storeId, userId, storeName) => {
     try {
-      if (!storename) {
+      if (!storeName) {
         return {
           status: 400,
           message: '변경 할 가게 이름의 형식이 일치하지 않습니다',
         };
       }
-      const store = await this.storesRepository.findStore(storeId);
+      const store = await this.storesRepository.findstore(userId);
 
-      if (userId !== store.UserId) {
+      if (!store) {
         return {
           status: 401,
           message: '가게 이름을 수정할 권한이 없습니다',
@@ -115,10 +116,7 @@ class StoresService {
       }
 
       //저장소에게 데이터 요청
-      const updatestore = await this.postRepository.updatePost(
-        storeId,
-        storename
-      );
+      await this.storesRepository.updatestore(storeId, storeName);
       return {
         status: 201,
         message: '가게 이름 수정에 성공했습니다',
@@ -134,7 +132,7 @@ class StoresService {
 
   deleteStore = async (storeId, userId) => {
     try {
-      const store = await this.storesRepository.findStore(storeId);
+      const store = await this.storesRepository.findstore(storeId);
       if (store.UserId !== userId) {
         return {
           status: 403,

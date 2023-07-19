@@ -17,10 +17,14 @@ module.exports = {
         allowNull: false, // NOT NULL
         type: Sequelize.INTEGER,
       },
+      MenuId: {
+        allowNull: false, // NOT NULL
+        type: Sequelize.INTEGER,
+      },
       status: {
         allowNull: false, // NOT NULL
+        defaultValue: 0,
         type: Sequelize.STRING,
-        unique: true,
       },
       totalpoint: {
         allowNull: false, // NOT NULL

@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: 'storeId', //
         foreignKey: 'StoreId', //
       });
+      this.belongsTo(models.Menus, {
+        sourceKey: 'menuId', //
+        foreignKey: 'MenuId', //
+      });
     }
   }
 
@@ -38,10 +42,14 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false, // NOT NULL
         type: DataTypes.INTEGER,
       },
+      MenuId: {
+        allowNull: false, // NOT NULL
+        type: DataTypes.INTEGER,
+      },
       status: {
         allowNull: false, // NOT NULL
+        defaultValue: 0,
         type: DataTypes.STRING,
-        unique: true,
       },
       totalpoint: {
         allowNull: false, // NOT NULL
