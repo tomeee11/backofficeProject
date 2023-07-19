@@ -8,6 +8,7 @@ class ReviewRepository {
         {
           model: Users,
           attributes: ['nickname'],
+          as: 'User',
         },
       ],
       order: [['createdAt', 'desc']],
@@ -16,26 +17,27 @@ class ReviewRepository {
     return reviews;
   };
 
-  // 상세 리뷰 조회
-  //   findOneReview = async (storeId, reviewId) => {
-  //     const review = await Reviews.findOne({
-  //       where: { storeId },
-  //       include: [
-  //         {
-  //           model: Users,
-  //           attributes: ['nickname'],
-  //         },
-  //       ],
-  //     });
+  // 가게 존재 여부를 위해 storeId 기준으로 조회
+  findStoreId = async storeId => {
+    const store = await Stores.findOne({ where: { storeId } });
+    return store;
+  };
 
-  //   return review;
-  // };
+  // review 존재 여부를 위해 reviewId 기준으로 조회
+  findReviewId = async reviewId => {
+    const review = await Reviews.findOne({ where: { reviewId } });
+    return review;
+  };
 
-  // store 존재 여부를 위해 storeId 기준으로 조회
-  //   findStoreId = async storeId => {
-  //     const store = await Stores.findOne({ where: { storeId } });
-  //     return store;
-  //   };
+  // 리뷰 작성
+  createReview = async (userId, storeId, comment, star) => {
+    await Reviews.create({
+      UserId: userId,
+      StoreId: storeId,
+      comment,
+      star,
+    });
+  };
 
   // 리뷰 수정
   updateReview = async (reviewId, updateReview) => {
