@@ -39,19 +39,6 @@ class ReviewRepository {
     });
   };
 
-  createReview = async (userId, comment, star) => {
-    const Review = await Reviews.findOne({ where: { Userid: userId } });
-    if (!Review) {
-      throw new Error('게시물을 찾을 수 없습니다');
-    }
-    const createReview = await Reviews.create({
-      UserId: userId,
-      comment,
-      star,
-    });
-    return createReview;
-  };
-
   // 리뷰 수정
   updateReview = async (reviewId, updateReview) => {
     await Reviews.update(updateReview, { where: { reviewId } });
