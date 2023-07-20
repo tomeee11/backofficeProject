@@ -45,15 +45,6 @@ class ReviewService {
   // 리뷰 작성
   createReview = async (userId, storeId, comment, star) => {
     try {
-      // storeId로 가게 존재 유무 조회
-      const store = await this.reviewRepository.findStoreId(storeId);
-
-      if (!store) {
-        return {
-          status: 400,
-          message: '가게를 찾을 수 없습니다.',
-        };
-      }
       if (!comment) {
         return {
           status: 400,
