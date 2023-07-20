@@ -10,6 +10,14 @@ class MenuOrderCustomersController {
     res.status(status).json({ message, orders });
   };
 
+  getOrderUser = async (req, res, next) => {
+    const { userId } = res.locals.user;
+    const { storeId } = req.params;
+    const { status, message, orders } =
+      await this.customerOrderService.getOrderUser(userId, storeId);
+    res.status(status).json({ message, orders });
+  };
+
   postorder = async (req, res, next) => {
     const { userId } = res.locals.user;
     const { storeId } = req.params;

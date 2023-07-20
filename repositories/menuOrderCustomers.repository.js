@@ -1,4 +1,9 @@
-const { menuOrderCustomers, OrderCustomers, Stores } = require('../models');
+const {
+  menuOrderCustomers,
+  OrderCustomers,
+  Stores,
+  Menus,
+} = require('../models');
 const { Op } = require('sequelize');
 
 class CustomerOrderRepository {
@@ -15,6 +20,32 @@ class CustomerOrderRepository {
     const findorder = await menuOrderCustomers.findAll({});
     return findorder;
   };
+  userAll = async (userId, storeId) => {
+    const findorder = await menuOrderCustomers.findAll({
+      include: [
+        {
+          model: Menus,
+          attributes: [
+            'UserId',
+            'StoreId',
+            'menuImage',
+            'menuName',
+            'menuPoint',
+          ],
+          as: 'Menu',
+          where: { [Op.and]: [{ UserId: userId }, { StoreId: storeId }] },
+        },
+      ],
+    });
+    return findorder;
+  };
+
+  // userAll = async (userId, storeId) => {
+  //   const findorder = await Menus.findAll({
+  //     where: { [Op.and]: [{ UserId: userId }, { StoreId: storeId }] },
+  //   });
+  //   return findorder;
+  // };
 
   findAllStore = async (storeId, menuId) => {
     const findstore = await Stores.findAll({

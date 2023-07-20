@@ -65,7 +65,7 @@ class MenusService {
     }
   };
 
-  PutMenus = async (storeId, menuId, image, name, point) => {
+  PutMenus = async (storeId, menuId, point, image, name) => {
     const menu = await this.menusRepository.findOneMenu(menuId);
     try {
       if (!menu) {
@@ -77,9 +77,9 @@ class MenusService {
       await this.menusRepository.updateMenu(
         storeId,
         menuId,
+        point,
         image,
-        name,
-        point
+        name
       );
 
       return {
@@ -115,32 +115,6 @@ class MenusService {
       return {
         status: 400,
         message: '메뉴 삭제에 실패하였습니다',
-      };
-    }
-  };
-
-  updateStatus = async (storeId, menuId) => {
-    try {
-      const findOne = await this.menusRepository.findOneMenu(menuId);
-      const getStatus = findOne.dataValues.status;
-      let x;
-      if (getStatus === 1) {
-        x = 0;
-      } else {
-        x = 1;
-      }
-      const menu = findOne.dataValues.menuId;
-      const update = await this.menusRepository.updateStatus(storeId, menu, x);
-
-      return {
-        statuss: 200,
-        message: '장바구니에 담겼습니다(상태변경)',
-      };
-    } catch (error) {
-      console.log(error);
-      return {
-        statuss: 400,
-        message: '상태변경 실패',
       };
     }
   };

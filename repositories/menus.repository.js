@@ -27,9 +27,9 @@ class MenusRepository {
     return findallmenu;
   };
 
-  updateMenu = async (storeId, menuId, image, name, point) => {
+  updateMenu = async (storeId, menuId, point, image, name) => {
     const updatemenu = await Menus.update(
-      { menuName: name, menuPoint: point, menuImage: image },
+      { menuName: name, menuImage: image, menuPoint: point },
       { where: { [Op.and]: [{ StoreId: storeId }, { menuId: menuId }] } }
     );
     return updatemenu;
@@ -40,13 +40,6 @@ class MenusRepository {
       where: { [Op.and]: [{ StoreId: storeId }, { menuId: menuId }] },
     });
     return destroymenu;
-  };
-
-  updateStatus = async (storeId, menu, x) => {
-    const update = await Menus.update(
-      { status: x },
-      { where: { [Op.and]: [{ StoreId: storeId }, { menuId: menu }] } }
-    );
   };
 }
 

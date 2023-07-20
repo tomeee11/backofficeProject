@@ -9,7 +9,7 @@ class CustomerOrderService {
     await this.customerOrderRepository.createorder(userId, storeId, menuId);
     return {
       status: 200,
-      message: '테스트용',
+      message: '장바구니에 담겼습니다.',
     };
   };
 
@@ -25,12 +25,42 @@ class CustomerOrderService {
       message: orders,
     };
   };
+
+  getOrderUser = async (userId, storeId, menuId) => {
+    const orders = await this.customerOrderRepository.userAll(
+      userId,
+      storeId,
+      menuId
+    );
+
+    const order = orders.map(item => {
+      return {
+        UserId: item.Menu.UserId,
+        StoreId: item.Menu.StoreId,
+        menuorderId: item.menuorderId,
+        MenuId: item.MenuId,
+        OrdercustomerId: item.OrdercustomerId,
+        amount: item.amount,
+        menuImage: item.Menu.menuImage,
+        menuName: item.Menu.menuName,
+        menuPoint: item.Menu.menuPoint,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
+      };
+    });
+
+    return {
+      status: 201,
+      message: order,
+    };
+  };
+
   deleteorder = async (menuId, menuorderId) => {
     console.log(menuId);
     await this.customerOrderRepository.destroyorder(menuId, menuorderId);
     return {
       status: 202,
-      message: '삭제 테스트',
+      message: '장바구니에서 삭제되었습니다.',
     };
   };
 
