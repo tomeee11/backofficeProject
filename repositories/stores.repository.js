@@ -1,23 +1,29 @@
 const { Sequelize } = require('sequelize');
-const { Stores, Menus } = require('../models');
+const { Stores } = require('../models');
 
 class StoresRepository {
+  // 모든 가게 조회
   findStores = async () => {
-    const stores = await Stores.findAll();
+    const stores = await Stores.findAll({
+      order: [['createdAt', 'desc']],
+    });
     return stores;
   };
-  createStore = async (userId, storeName) => {
-    const result = await Stores.create({ UserId: userId, storeName });
-    return result;
+
+  // 내 가게 조회 (상세 조회)
+  findStore = async storeId => {
+    const store = await Stores.findOne({ where: { storeId } });
+    console.log(store);
+    return store;
   };
 
   findkeyword = async keyword => {
     const query = `
-        SELECT *
-        FROM Stores
-        LEFT JOIN Menus ON Stores.storeId = Menus.StoreId
-        WHERE Stores.storeName LIKE '%${keyword}%' OR Menus.menuName LIKE '%${keyword}%'
-      `;
+    SELECT *
+    FROM Stores
+    LEFT JOIN Menus ON Stores.storeId = Menus.StoreId
+    WHERE Stores.storeName LIKE '%${keyword}%' OR Menus.menuName LIKE '%${keyword}%'
+    `;
 
     const [results, metadata] = await Stores.sequelize.query(query, {
       type: Sequelize.QueryTypes.SELECT,
@@ -26,13 +32,24 @@ class StoresRepository {
     return results;
   };
 
-  findStore = async userId => {
+  // 새로운 가게 생성
+  createStore = async (userId, storeName) => {
+    const result = await Stores.create({ UserId: userId, storeName });
+    return result;
+  };
+
+  // 현재 로그인한 userId값으로 가게 존재 유무 확인
+  findOneStore = async userId => {
     const stores = await Stores.findOne({ where: { UserId: userId } });
     return stores;
   };
-  updatestore = async (storeId, storeName) => {
+
+  // 가게 이름 수정
+  updateStore = async (storeId, storeName) => {
     await Stores.update({ storeName }, { where: { storeId } });
   };
+
+  // 가게 삭제
   deleteStore = async storeId => {
     await Stores.destroy({
       where: { storeId },
