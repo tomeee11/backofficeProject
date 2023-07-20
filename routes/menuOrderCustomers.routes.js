@@ -24,18 +24,11 @@ router.delete(
   menuOrdercustomersController.deleteorder
 );
 
-// + 버튼
+// +, - 판별
 router.put(
-  '/plus/:storeId',
+  '/sign/:storeId',
   authMiddleware,
-  menuOrdercustomersController.plusAmount
-);
-
-// - 버튼
-router.put(
-  '/minus/:storeId',
-  authMiddleware,
-  menuOrdercustomersController.minusAmount
+  menuOrdercustomersController.signAmount
 );
 
 module.exports = router;

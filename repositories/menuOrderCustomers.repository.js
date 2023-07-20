@@ -29,27 +29,20 @@ class CustomerOrderRepository {
     });
     return order;
   };
-  getAmount = async menuId => {
+
+  getAmount = async (menuId, menuorderId) => {
     const amount = await menuOrderCustomers.findOne({
-      where: { MenuId: menuId },
+      where: { [Op.and]: [{ MenuId: menuId }, { menuorderId }] },
     });
     return amount;
   };
 
-  plusAmount = async (menuId, menuorderId, plusA) => {
+  signAmount = async (menuId, menuorderId, plusA) => {
     const order = await menuOrderCustomers.update(
       { amount: plusA },
       {
         where: { [Op.and]: [{ MenuId: menuId }, { menuorderId: menuorderId }] },
       }
-    );
-    return order;
-  };
-
-  minusAmount = async (menuId, menuorderId, minusA) => {
-    const order = await menuOrderCustomers.update(
-      { amount: minusA },
-      { where: { [Op.and]: [{ MenuId: menuId }, { menuorderId }] } }
     );
     return order;
   };
