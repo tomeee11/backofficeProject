@@ -19,17 +19,21 @@ const setUser = async (req, res, next) => {
 };
 
 // 회원가입
-router.post('/users', setUser, async (req, res) => {
-  const { email, password, nickname } = req.body;
+router.post('/users', async (req, res) => {
+  const { email, password, nickname, role } = req.body;
   const isExistUser = await Users.findOne({ where: { email } });
-
   if (isExistUser) {
     return res.status(409).json({ message: '이미 존재하는 이메일입니다.' });
   }
-
   // Users 테이블에 사용자를 추가합니다.
-  const user = await Users.create({ email, password, nickname });
+  const user = await Users.create({ email, password, nickname, role });
 
+  const userInfo = await Users.findOne({ where: { email } });
+  if (userInfo.role === 0) {
+    const givingpoint = 1000000;
+    user.point = givingpoint;
+    await user.save();
+  }
   return res.status(201).json({ message: '회원가입이 완료되었습니다.' });
 });
 

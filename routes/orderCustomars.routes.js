@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/auth-middleware');
+const roleMiddleware = require('../middlewares/role-middleware');
 const OrdersCustomerController = require('../controllers/orderCustomars.controller');
 const ordersCustomerController = new OrdersCustomerController();
 
@@ -16,10 +17,12 @@ router.get(
   authMiddleware,
   ordersCustomerController.getOrder
 );
+
 // 사장이 버튼 클릭해서 배달 완료
 router.put(
   '/store/:storeId/:ordercustomerId',
   authMiddleware,
+  roleMiddleware,
   ordersCustomerController.updateState
 );
 
