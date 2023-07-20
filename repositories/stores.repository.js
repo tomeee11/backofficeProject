@@ -6,9 +6,11 @@ class StoresRepository {
     return stores;
   };
   createStore = async (userId, storeName) => {
-    await Stores.create({ UserId: userId, storeName });
+    const result = await Stores.create({ UserId: userId, storeName });
+    return result;
   };
-  findstore = async userId => {
+
+  findStore = async userId => {
     const stores = await Stores.findOne({ where: { UserId: userId } });
     return stores;
   };

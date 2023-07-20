@@ -5,15 +5,18 @@ const storesRouter = require('./stores.routes');
 router.use('/', storesRouter);
 
 const menusRouter = require('./menus.routes');
-router.use('/', menusRouter);
+router.use('/menus', menusRouter);
 
 const userRouter = require('./users.route');
 router.use('/', userRouter);
 
-// const ordersRouter = require('./orders.routes');
-// router.use('/orders/', ordersRouter);
+const menuOrderCustomersRouter = require('./menuOrderCustomers.routes');
+router.use('/menuOrderCustomers', menuOrderCustomersRouter);
 
 const reviewsRouter = require('./reviews.routes');
 router.use('/', reviewsRouter);
+
+const ordercustomerRouter = require('./orderCustomars.routes');
+router.use('/ordercustomers', ordercustomerRouter);
 
 module.exports = router;
