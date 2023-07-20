@@ -4,7 +4,7 @@ const MenusRepository = require('../repositories/menus.repository');
 class MenusService {
   menusRepository = new MenusRepository();
 
-  // 전체 메뉴 조회
+  // 가게 전체 메뉴 조회
   GetMenus = async storeId => {
     try {
       const findAllMenus = await this.menusRepository.findAllMenu(storeId);

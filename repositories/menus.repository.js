@@ -1,7 +1,7 @@
 const { Users, Stores, Menus } = require('../models');
 const { Op } = require('sequelize');
 class MenusRepository {
-  // 전체 메뉴 조회
+  // 가게 전체 메뉴 조회
   findAllMenu = async storeId => {
     const findAllMenus = await Menus.findAll({
       where: { StoreId: storeId },

@@ -3,7 +3,7 @@ const MenusService = require('../services/menus.service');
 class MenusController {
   menusService = new MenusService();
 
-  // 전체 메뉴 조회
+  // 가게 전체 메뉴 조회
   GetMenus = async (req, res, next) => {
     const { storeId } = req.params;
     const { status, message } = await this.menusService.GetMenus(storeId);

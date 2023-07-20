@@ -7,7 +7,7 @@ const { upload } = require('../s3/image.s3');
 const MenusController = require('../controllers/menus.controller');
 const menusController = new MenusController();
 
-// 전체 메뉴 조회
+// 가게 전체 메뉴 조회
 router.get('/store/:storeId/menus', authMiddleware, menusController.GetMenus);
 
 // 메뉴 추가
