@@ -4,16 +4,16 @@ class MenusController {
   menusService = new MenusService();
 
   PostMenus = async (req, res, next) => {
-    const { name, menuPoint, menuImage } = req.body;
+    const { name, Point, Image } = req.body;
     const { userId } = res.locals.user;
     const { storeId } = req.params;
 
     const { status, message } = await this.menusService.PostMenus(
       userId,
-      menuImage,
+      Image,
       storeId,
       name,
-      menuPoint
+      Point
     );
     res.status(status).json({ message });
   };

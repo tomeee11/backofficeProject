@@ -28,31 +28,19 @@ class MenuOrderCustomersController {
     const { storeId } = req.params;
     const { menuId, menuorderId } = req.body;
     const { status, message } = await this.customerOrderService.deleteorder(
-      userId,
-      storeId,
       menuId,
       menuorderId
     );
     res.status(status).json({ message });
   };
 
-  plusAmount = async (req, res, next) => {
+  signAmount = async (req, res, next) => {
     const { userId } = res.locals.user;
-    const { menuId, menuorderId } = req.body;
-    const { status, message } = await this.customerOrderService.plusAmount(
+    const { menuId, menuorderId, sign } = req.body;
+    const { status, message } = await this.customerOrderService.signAmount(
       menuId,
       menuorderId,
-      userId
-    );
-    res.status(status).json({ message });
-  };
-
-  minusAmount = async (req, res, next) => {
-    const { userId } = res.locals.user;
-    const { menuId, menuorderId } = req.body;
-    const { status, message } = await this.customerOrderService.minusAmount(
-      menuId,
-      menuorderId,
+      sign,
       userId
     );
     res.status(status).json({ message });
