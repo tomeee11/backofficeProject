@@ -29,7 +29,7 @@ module.exports = {
         allowNull: false, // NOT NULL
         type: Sequelize.INTEGER,
       },
-      status: {
+      amount: {
         allowNull: false, // NOT NULL
         type: Sequelize.INTEGER,
         defaultValue: 0,

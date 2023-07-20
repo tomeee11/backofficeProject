@@ -75,19 +75,10 @@ class StoresService {
         storeName
       );
 
-      const stores = newstore.map(z => {
-        return {
-          storeId: z.storeId,
-          UserId: z.UserId,
-          storeName: z.storeName,
-          createdAt: z.createdAt,
-          updatedAt: z.updatedAt,
-        };
-      });
       return {
         status: 200,
         message: '사장님의 가게가 새로 생성되었습니다',
-        stores,
+        newstore,
       };
     } catch (error) {
       console.log(error);
@@ -106,7 +97,7 @@ class StoresService {
           message: '변경 할 가게 이름의 형식이 일치하지 않습니다',
         };
       }
-      const store = await this.storesRepository.findstore(userId);
+      const store = await this.storesRepository.findStore(userId);
 
       if (!store) {
         return {
@@ -132,7 +123,7 @@ class StoresService {
 
   deleteStore = async (storeId, userId) => {
     try {
-      const store = await this.storesRepository.findstore(storeId);
+      const store = await this.storesRepository.findStore(storeId);
       if (store.UserId !== userId) {
         return {
           status: 403,

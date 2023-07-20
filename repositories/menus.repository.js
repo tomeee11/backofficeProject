@@ -1,13 +1,13 @@
 const { Users, Stores, Menus } = require('../models');
 const { Op } = require('sequelize');
 class MenusRepository {
-  createMenu = async (userId, image, storeId, name, point) => {
+  createMenu = async (userId, menuImage, storeId, name, menuPoint) => {
     const createmenu = await Menus.create({
       UserId: userId,
       StoreId: storeId,
-      menuImage: image,
+      menuImage: menuImage,
       menuName: name,
-      menuPoint: point,
+      menuPoint: menuPoint,
     });
     return createmenu;
   };
@@ -40,6 +40,13 @@ class MenusRepository {
       where: { [Op.and]: [{ StoreId: storeId }, { menuId: menuId }] },
     });
     return destroymenu;
+  };
+
+  updateStatus = async (storeId, menu, x) => {
+    const update = await Menus.update(
+      { status: x },
+      { where: { [Op.and]: [{ StoreId: storeId }, { menuId: menu }] } }
+    );
   };
 }
 

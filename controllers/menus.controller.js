@@ -4,16 +4,16 @@ class MenusController {
   menusService = new MenusService();
 
   PostMenus = async (req, res, next) => {
-    const { name, point, image } = req.body;
+    const { name, menuPoint, menuImage } = req.body;
     const { userId } = res.locals.user;
     const { storeId } = req.params;
 
     const { status, message } = await this.menusService.PostMenus(
       userId,
-      image,
+      menuImage,
       storeId,
       name,
-      point
+      menuPoint
     );
     res.status(status).json({ message });
   };
@@ -52,6 +52,18 @@ class MenusController {
       menuId
     );
     res.status(status).json({ message });
+  };
+
+  PutStatus = async (req, res, next) => {
+    const { storeId, menuId } = req.params;
+    const { status } = req.body;
+
+    const { statuss, message } = await this.menusService.updateStatus(
+      storeId,
+      menuId,
+      status
+    );
+    res.status(statuss).json({ message });
   };
 }
 

@@ -4,14 +4,14 @@ const MenusRepository = require('../repositories/menus.repository');
 class MenusService {
   menusRepository = new MenusRepository();
 
-  PostMenus = async (userId, image, storeId, name, point) => {
+  PostMenus = async (userId, menuImage, storeId, name, menuPoint) => {
     try {
       const createMenu = await this.menusRepository.createMenu(
         userId,
-        image,
+        menuImage,
         storeId,
         name,
-        point
+        menuPoint
       );
       return {
         status: 200,
@@ -115,6 +115,32 @@ class MenusService {
       return {
         status: 400,
         message: '메뉴 삭제에 실패하였습니다',
+      };
+    }
+  };
+
+  updateStatus = async (storeId, menuId) => {
+    try {
+      const findOne = await this.menusRepository.findOneMenu(menuId);
+      const getStatus = findOne.dataValues.status;
+      let x;
+      if (getStatus === 1) {
+        x = 0;
+      } else {
+        x = 1;
+      }
+      const menu = findOne.dataValues.menuId;
+      const update = await this.menusRepository.updateStatus(storeId, menu, x);
+
+      return {
+        statuss: 200,
+        message: '장바구니에 담겼습니다(상태변경)',
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        statuss: 400,
+        message: '상태변경 실패',
       };
     }
   };
