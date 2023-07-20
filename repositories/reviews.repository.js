@@ -1,0 +1,66 @@
+const { Users, Reviews, Stores } = require('../models');
+
+class ReviewRepository {
+  // 전체 리뷰 조회
+  findAllReview = async () => {
+    const reviews = await Reviews.findAll({
+      include: [
+        {
+          model: Users,
+          attributes: ['nickname'],
+          as: 'User',
+        },
+      ],
+      order: [['createdAt', 'desc']],
+    });
+
+    return reviews;
+  };
+
+  // 가게 존재 여부를 위해 storeId 기준으로 조회
+  findStoreId = async storeId => {
+    const store = await Stores.findOne({ where: { storeId } });
+    return store;
+  };
+
+  // review 존재 여부를 위해 reviewId 기준으로 조회
+  findReviewId = async reviewId => {
+    const review = await Reviews.findOne({ where: { reviewId } });
+    return review;
+  };
+
+  // 리뷰 작성
+  createReview = async (userId, storeId, comment, star) => {
+    await Reviews.create({
+      UserId: userId,
+      StoreId: storeId,
+      comment,
+      star,
+    });
+  };
+
+  createReview = async (userId, comment, star) => {
+    const Review = await Reviews.findOne({ where: { Userid: userId } });
+    if (!Review) {
+      throw new Error('게시물을 찾을 수 없습니다');
+    }
+    const createReview = await Reviews.create({
+      UserId: userId,
+      comment,
+      star,
+    });
+    return createReview;
+  };
+
+  // 리뷰 수정
+  updateReview = async (reviewId, updateReview) => {
+    await Reviews.update(updateReview, { where: { reviewId } });
+  };
+
+  // 리뷰 삭제
+  deleteReview = async reviewId => {
+    await Reviews.destroy({ where: { reviewId } });
+  };
+}
+
+module.exports = ReviewRepository;

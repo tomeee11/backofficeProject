@@ -19,9 +19,12 @@ module.exports = (sequelize, DataTypes) => {
         sourceKey: 'storeId', //
         foreignKey: 'StoreId', //
       });
+      this.hasOne(models.menuOrderCustomers, {
+        sourceKey: 'menuId', //
+        foreignKey: 'MenuId', //
+      });
     }
   }
-
   Menus.init(
     {
       menuId: {
@@ -49,6 +52,11 @@ module.exports = (sequelize, DataTypes) => {
       menuPoint: {
         allowNull: false, // NOT NULL
         type: DataTypes.INTEGER,
+      },
+      amount: {
+        allowNull: false, // NOT NULL
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false, // NOT NULL

@@ -1,7 +1,7 @@
 'use strict';
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Orders extends Model {
+  class menuOrderCustomers extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -9,43 +9,37 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-
-      this.belongsTo(models.Users, {
-        sourceKey: 'userId', //
-        foreignKey: 'UserId', //
+      this.belongsTo(models.Menus, {
+        sourceKey: 'menuId', //
+        foreignKey: 'MenuId', //
       });
-      // 1. Users 모델에서
-      this.belongsTo(models.Stores, {
-        sourceKey: 'storeId', //
-        foreignKey: 'StoreId', //
+
+      this.belongsTo(models.OrderCustomers, {
+        sourceKey: 'ordercustomerId', //
+        foreignKey: 'OrdercustomerId', //
       });
     }
   }
 
-  Orders.init(
+  menuOrderCustomers.init(
     {
-      orderId: {
+      menuorderId: {
         allowNull: false, // NOT NULL
         autoIncrement: true, // AUTO_INCREMENT
         primaryKey: true, // Primary Key (기본키)
         type: DataTypes.INTEGER,
       },
-      UserId: {
+      MenuId: {
         allowNull: false, // NOT NULL
         type: DataTypes.INTEGER,
       },
-      StoreId: {
-        allowNull: false, // NOT NULL
+      OrdercustomerId: {
         type: DataTypes.INTEGER,
       },
-      status: {
-        allowNull: false, // NOT NULL
-        type: DataTypes.STRING,
-        unique: true,
-      },
-      totalpoint: {
+      amount: {
         allowNull: false, // NOT NULL
         type: DataTypes.INTEGER,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false, // NOT NULL
@@ -60,8 +54,8 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Orders',
+      modelName: 'menuOrderCustomers',
     }
   );
-  return Orders;
+  return menuOrderCustomers;
 };

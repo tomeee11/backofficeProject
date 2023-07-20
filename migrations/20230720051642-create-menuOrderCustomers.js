@@ -2,29 +2,24 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Orders', {
-      orderId: {
+    await queryInterface.createTable('menuOrderCustomers', {
+      menuorderId: {
         allowNull: false, // NOT NULL
         autoIncrement: true, // AUTO_INCREMENT
         primaryKey: true, // Primary Key (기본키)
         type: Sequelize.INTEGER,
       },
-      UserId: {
+      MenuId: {
         allowNull: false, // NOT NULL
         type: Sequelize.INTEGER,
       },
-      StoreId: {
-        allowNull: false, // NOT NULL
+      OrdercustomerId: {
         type: Sequelize.INTEGER,
       },
-      status: {
-        allowNull: false, // NOT NULL
-        type: Sequelize.STRING,
-        unique: true,
-      },
-      totalpoint: {
+      amount: {
         allowNull: false, // NOT NULL
         type: Sequelize.INTEGER,
+        defaultValue: 0,
       },
       createdAt: {
         allowNull: false, // NOT NULL
@@ -39,6 +34,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Orders');
+    await queryInterface.dropTable('menuOrderCustomers');
   },
 };
