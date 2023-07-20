@@ -3,9 +3,28 @@ const OrderCustomarsRepository = require('../repositories/orderCustomars.reposit
 class orderCustomarsService {
   orderCustomarsRepository = new OrderCustomarsRepository();
 
-  postOrder = async (storeId, menuorderId) => {
+  postOrder = async (storeId, menuorderId, userId, menuId) => {
     try {
-      //role 완료되면 권한 에러 핸들링 해야함
+      //주문 하기 전에 잔여 포인트가 토탈 포인트보다 많은지 확인을 우선적으로 해줘야함
+      //내 포인트
+      const getPoint = await this.orderCustomarsRepository.getPoint(userId);
+      //현재 장바구니 안에 들어가 있는 메뉴들의 총 가격
+      const getTotalPoint = await this.orderCustomarsRepository.getTotalPoint();
+
+      console.log('@@@@@@@@' + getTotalPoint);
+      let totalPoint;
+      getTotalPoint.map(a => {
+        totalPoint += a.Menu.menuPoint;
+      });
+      console.log('@@@@' + totalPoint);
+
+      if (getPoint.point < totalPoint) {
+        return {
+          status: 405,
+          message: '잔액이 부족합니다',
+        };
+      }
+      //후에 주문 완료
       const order = await this.orderCustomarsRepository.postOrder();
       const ordercustomerId = order.ordercustomerId;
       const putOrdercustomerId =

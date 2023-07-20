@@ -1,6 +1,34 @@
-const { OrderCustomers, menuOrderCustomers, Menus } = require('../models');
+const {
+  OrderCustomers,
+  menuOrderCustomers,
+  Menus,
+  Users,
+} = require('../models');
 
 class orderCustomarsRepository {
+  getPoint = async userId => {
+    const point = await Users.findOne({
+      where: { userId },
+    });
+    return point;
+  };
+
+  getTotalPoint = async () => {
+    const totalPoint = await menuOrderCustomers.findAll({
+      include: [
+        {
+          model: Menus,
+          // where: { MenuId: menuId },
+          // attributes: ['menuPoint'],
+          as: 'Menu',
+        },
+      ],
+    });
+
+    //근데 생각해보니까 그 메뉴가 몇개 주문됐는지도 확인해야함 ^^
+    return totalPoint;
+  };
+
   postOrder = async () => {
     const order = await OrderCustomers.create();
     return order;

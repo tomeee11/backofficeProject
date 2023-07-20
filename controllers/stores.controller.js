@@ -1,3 +1,4 @@
+// 사장님 롤을 포함
 const StoresService = require('../services/stores.service');
 
 class StoresController {
@@ -12,6 +13,14 @@ class StoresController {
     const { storeId } = req.params;
     const { status, message, stores } = await this.storesService.findstore(
       storeId
+    );
+    res.status(status).json({ message, stores });
+  };
+
+  findkeyword = async (req, res, next) => {
+    const { keyword } = req.body;
+    const { status, message, stores } = await this.storesService.findkeyword(
+      keyword
     );
     res.status(status).json({ message, stores });
   };
@@ -52,5 +61,4 @@ class StoresController {
     res.status(status).json({ message });
   };
 }
-
 module.exports = StoresController;
