@@ -29,9 +29,35 @@ class StoresService {
       };
     }
   };
+
+  findkeyword = async keyword => {
+    try {
+      const stores = await this.storesRepository.findkeyword(keyword);
+      const storex = [stores];
+
+      const as = storex.map(store => ({
+        storeId: store.StoreId,
+        menuId: store.menuId,
+      }));
+
+      return {
+        status: 200,
+        message: '검색이 성공하였습니다',
+        stores: as,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        status: 400,
+        message: '키워드 검색에 실패하였습니다',
+      };
+    }
+  };
+
   findstore = async storeId => {
     try {
       const store = await this.storesRepository.findStore(storeId);
+
       if (!store) {
         return {
           status: 404,

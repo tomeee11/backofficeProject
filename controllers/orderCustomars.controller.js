@@ -6,10 +6,14 @@ class orderCustomarsController {
   // 손님이 주문 완료
   postOrder = async (req, res, next) => {
     const { storeId, menuorderId } = req.params;
+    const { userId } = res.locals.user;
+
+    //잔여 포인트가 토탈 포인트보다 많을때만 주문 가능
 
     const { status, message } = await this.ordersCustomerService.postOrder(
       storeId,
-      menuorderId
+      menuorderId,
+      userId
     );
     res.status(status).json({ message });
   };

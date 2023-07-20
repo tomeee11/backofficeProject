@@ -1,4 +1,5 @@
-const { Stores } = require('../models');
+const { Sequelize } = require('sequelize');
+const { Stores, Menus } = require('../models');
 
 class StoresRepository {
   findStores = async () => {
@@ -10,8 +11,23 @@ class StoresRepository {
     return result;
   };
 
-  findStore = async storeId => {
-    const stores = await Stores.findOne({ where: { storeId } });
+  findkeyword = async keyword => {
+    const query = `
+        SELECT *
+        FROM Stores
+        LEFT JOIN Menus ON Stores.storeId = Menus.StoreId
+        WHERE Stores.storeName LIKE '%${keyword}%' OR Menus.menuName LIKE '%${keyword}%'
+      `;
+
+    const [results, metadata] = await Stores.sequelize.query(query, {
+      type: Sequelize.QueryTypes.SELECT,
+    });
+
+    return results;
+  };
+
+  findStore = async userId => {
+    const stores = await Stores.findOne({ where: { UserId: userId } });
     return stores;
   };
   updatestore = async (storeId, storeName) => {
