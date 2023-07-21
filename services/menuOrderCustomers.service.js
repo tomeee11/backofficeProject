@@ -5,58 +5,89 @@ const CustomerOrderRepository = require('../repositories/menuOrderCustomers.repo
 class CustomerOrderService {
   customerOrderRepository = new CustomerOrderRepository();
 
-  postorder = async (userId, storeId, menuId) => {
-    await this.customerOrderRepository.createorder(userId, storeId, menuId);
-    return {
-      status: 200,
-      message: '장바구니에 담겼습니다.',
-    };
-  };
-
-  getorder = async (userId, storeId, menuId) => {
-    const orders = await this.customerOrderRepository.findAll(
-      userId,
-      storeId,
-      menuId
-    );
-
-    return {
-      status: 201,
-      message: orders,
-    };
-  };
-
+  // 고객 본인 장바구니 조회
   getOrderUser = async (userId, storeId, menuId) => {
-    const orders = await this.customerOrderRepository.userAll(
-      userId,
-      storeId,
-      menuId
-    );
+    try {
+      const orders = await this.customerOrderRepository.userAll(
+        userId,
+        storeId,
+        menuId
+      );
 
-    const order = orders.map(item => {
+      if (orders.length === 0) {
+        return {
+          status: 400,
+          message: '장바구니가 비어있습니다.',
+        };
+      }
+
+      const order = orders.map(item => {
+        return {
+          UserId: item.Menu.UserId,
+          StoreId: item.Menu.StoreId,
+          menuorderId: item.menuorderId,
+          MenuId: item.MenuId,
+          OrdercustomerId: item.OrdercustomerId,
+          amount: item.amount,
+          menuImage: item.Menu.menuImage,
+          menuName: item.Menu.menuName,
+          menuPoint: item.Menu.menuPoint,
+          createdAt: item.createdAt,
+          updatedAt: item.updatedAt,
+        };
+      });
+
       return {
-        UserId: item.Menu.UserId,
-        StoreId: item.Menu.StoreId,
-        menuorderId: item.menuorderId,
-        MenuId: item.MenuId,
-        OrdercustomerId: item.OrdercustomerId,
-        amount: item.amount,
-        menuImage: item.Menu.menuImage,
-        menuName: item.Menu.menuName,
-        menuPoint: item.Menu.menuPoint,
-        createdAt: item.createdAt,
-        updatedAt: item.updatedAt,
+        status: 201,
+        message: order,
       };
-    });
-
-    return {
-      status: 201,
-      message: order,
-    };
+    } catch (error) {
+      return {
+        status: 400,
+        message: '장바구니 조회에 실패했습니다.',
+      };
+    }
   };
 
-  deleteorder = async (menuId, menuorderId) => {
-    console.log(menuId);
+  // 장바구니 담기
+  postorder = async (userId, storeId, menuId) => {
+    try {
+      // menuId 값으로 메뉴 존재 유무 조회
+      const menu = await this.customerOrderRepository.getMenu(menuId);
+
+      if (menuId !== menu.menuId) {
+        return {
+          status: 400,
+          message: '존재하지 않는 메뉴 입니다.',
+        };
+      }
+
+      await this.customerOrderRepository.createorder(userId, storeId, menuId);
+      return {
+        status: 200,
+        message: '장바구니에 담겼습니다.',
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        status: 400,
+        message: '장바구니에 담는 도중 오류가 발생하였습니다.',
+      };
+    }
+  };
+
+  // 장바구니 삭제
+  deleteorder = async (storeId, menuId, menuorderId) => {
+    // 가게 유무 조회
+    const store = await this.customerOrderRepository.findStore(storeId);
+
+    if (!store) {
+      return {
+        status: 400,
+        message: '존재하지 않는 가게 입니다.',
+      };
+    }
+
     await this.customerOrderRepository.destroyorder(menuId, menuorderId);
     return {
       status: 202,
@@ -64,6 +95,7 @@ class CustomerOrderService {
     };
   };
 
+  // 장바구니 메뉴 갯수 추가, 감소
   signAmount = async (menuId, menuorderId, sign, userId) => {
     try {
       const getAmount = await this.customerOrderRepository.getAmount(
@@ -72,7 +104,7 @@ class CustomerOrderService {
         sign
       );
       const amount = getAmount.amount;
-      console.log(amount);
+
       let plusA = 0;
       if (sign === 'PLUS') {
         plusA = amount + 1;
@@ -96,14 +128,12 @@ class CustomerOrderService {
       }
 
       await this.customerOrderRepository.signAmount(menuId, menuorderId, plusA);
-      console.log(plusA);
 
       return {
         status: 201,
         message: '장바구니 수량이 변경되었습니다.',
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
         message: '장바구니가 비어있습니다.',
