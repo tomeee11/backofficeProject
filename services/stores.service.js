@@ -79,12 +79,11 @@ class StoresService {
   };
 
   // 가게 생성
-  createStore = async (userId, storeName) => {
+  createStore = async (storeName, userId) => {
     try {
       // 현재 로그인한 userId값으로 가게 존재 유무 확인
       // 생성할 때 storeId 값을 안받아오기 때문에 userId값으로 가게 존재 유무 확인
       const store = await this.storesRepository.findOneStore(userId);
-
       if (store != null) {
         return {
           status: 404,
@@ -92,19 +91,11 @@ class StoresService {
         };
       }
 
-      if (store.storeName !== storeName) {
-        return {
-          status: 401,
-          message: '동일한 가게 이름이 존재합니다.',
-        };
-      }
-
       // 새로운 가게 생성
       const newstore = await this.storesRepository.createStore(
-        userId,
-        storeName
+        storeName,
+        userId
       );
-
       return {
         status: 200,
         message: '사장님의 가게가 새로 생성되었습니다.',

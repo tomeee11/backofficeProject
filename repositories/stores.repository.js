@@ -33,14 +33,13 @@ class StoresRepository {
   };
 
   // 새로운 가게 생성
-  createStore = async (userId, storeName) => {
+  createStore = async (storeName, userId) => {
     const result = await Stores.create({ UserId: userId, storeName });
     return result;
   };
 
   // 현재 로그인한 userId값으로 가게 존재 유무 확인
   findOneStore = async userId => {
-    console.log(userId);
     const stores = await Stores.findOne({ where: { UserId: userId } });
     return stores;
   };

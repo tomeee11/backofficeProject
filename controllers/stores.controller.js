@@ -31,10 +31,9 @@ class StoresController {
   createStore = async (req, res, next) => {
     const { storeName } = req.body;
     const { userId } = res.locals.user;
-
     const { status, message } = await this.storesService.createStore(
-      userId,
-      storeName
+      storeName,
+      userId
     );
 
     res.status(status).json({ message });
