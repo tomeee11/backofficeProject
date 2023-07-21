@@ -26,8 +26,8 @@ class StoresRepository {
     return results;
   };
 
-  findStore = async userId => {
-    const stores = await Stores.findOne({ where: { UserId: userId } });
+  findStore = async storeId => {
+    const stores = await Stores.findOne({ where: { storeId } });
     return stores;
   };
   updatestore = async (storeId, storeName) => {

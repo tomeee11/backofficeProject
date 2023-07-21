@@ -13,7 +13,7 @@ router.post(
   menusController.PostMenus
 );
 
-router.get('/store/:storeId', authMiddleware, menusController.GetMenus);
+router.get('/store/:storeId/menu', authMiddleware, menusController.GetMenus);
 router.put(
   '/store/:storeId/menu/:menuId',
   authMiddleware,
@@ -25,13 +25,6 @@ router.delete(
   authMiddleware,
   roleMiddleware,
   menusController.DeleteMenus
-);
-
-//메뉴 선택해서 상태 변경 (주문0)
-router.put(
-  '/store/:storeId/menu/:menuId/statusOn',
-  authMiddleware,
-  menusController.PutStatus
 );
 
 router.post('/123', upload.single('img'), (req, res) => {

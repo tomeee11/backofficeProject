@@ -123,7 +123,7 @@ class StoresService {
           message: '변경 할 가게 이름의 형식이 일치하지 않습니다',
         };
       }
-      const store = await this.storesRepository.findStore(userId);
+      const store = await this.storesRepository.findStore(storeId);
 
       if (!store) {
         return {
@@ -150,6 +150,7 @@ class StoresService {
   deleteStore = async (storeId, userId) => {
     try {
       const store = await this.storesRepository.findStore(storeId);
+      console.log('@@@@@@@@@@@' + store, storeId);
       if (store.UserId !== userId) {
         return {
           status: 403,
