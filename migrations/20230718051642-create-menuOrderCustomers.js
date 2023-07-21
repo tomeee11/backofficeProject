@@ -13,6 +13,10 @@ module.exports = {
         allowNull: false, // NOT NULL
         type: Sequelize.INTEGER,
       },
+      UserId: {
+        allowNull: false, // NOT NULL
+        type: Sequelize.INTEGER,
+      },
       OrdercustomerId: {
         type: Sequelize.INTEGER,
       },
