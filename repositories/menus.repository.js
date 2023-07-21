@@ -1,17 +1,44 @@
 const { Users, Stores, Menus } = require('../models');
 const { Op } = require('sequelize');
 class MenusRepository {
-  createMenu = async (userId, menuImage, storeId, name, menuPoint) => {
+  // 가게 전체 메뉴 조회
+  findAllMenu = async storeId => {
+    const findAllMenus = await Menus.findAll({
+      where: { StoreId: storeId },
+      attributes: [
+        'menuId',
+        'UserId',
+        'StoreId',
+        'menuName',
+        'menuPoint',
+        'menuImage',
+        'createdAt',
+        'updatedAt',
+      ],
+      order: [['menuPoint', 'desc']],
+    });
+    return findAllMenus;
+  };
+
+  // 메뉴 추가
+  createMenu = async (userId, storeId, name, Point, Image) => {
     const createmenu = await Menus.create({
       UserId: userId,
       StoreId: storeId,
-      menuImage: menuImage,
       menuName: name,
-      menuPoint: menuPoint,
+      menuPoint: Point,
+      menuImage: Image,
     });
     return createmenu;
   };
 
+  // 가게 유무 조회
+  getStore = async storeId => {
+    const store = await Stores.findOne({ where: { storeId } });
+    return store;
+  };
+
+  // 메뉴 유무 조회
   findOneMenu = async menuId => {
     const findOneMenu = await Menus.findOne({
       where: { menuId },
@@ -19,34 +46,21 @@ class MenusRepository {
     return findOneMenu;
   };
 
-  findAllMenu = async storeId => {
-    const findallmenu = await Menus.findAll({
-      where: { StoreId: storeId },
-      // include: [{ model: Users }, { model: Stores }],
-    });
-    return findallmenu;
-  };
-
-  updateMenu = async (storeId, menuId, image, name, point) => {
+  // 메뉴 수정
+  updateMenu = async (storeId, menuId, menuName, menuPoint, menuImage) => {
     const updatemenu = await Menus.update(
-      { menuName: name, menuPoint: point, menuImage: image },
+      { menuName: menuName, menuPoint: menuPoint, menuImage: menuImage },
       { where: { [Op.and]: [{ StoreId: storeId }, { menuId: menuId }] } }
     );
     return updatemenu;
   };
 
+  // 메뉴 삭제
   destroyMenu = async (storeId, menuId) => {
     const destroymenu = await Menus.destroy({
       where: { [Op.and]: [{ StoreId: storeId }, { menuId: menuId }] },
     });
     return destroymenu;
-  };
-
-  updateStatus = async (storeId, menu, x) => {
-    const update = await Menus.update(
-      { status: x },
-      { where: { [Op.and]: [{ StoreId: storeId }, { menuId: menu }] } }
-    );
   };
 }
 

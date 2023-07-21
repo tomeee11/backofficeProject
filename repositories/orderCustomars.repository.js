@@ -14,17 +14,11 @@ class orderCustomarsRepository {
   };
 
   getTotalPoint = async () => {
-    const totalPoint = await menuOrderCustomers.findAll({
-      include: [
-        {
-          model: Menus,
-          // where: { MenuId: menuId },
-          // attributes: ['menuPoint'],
-          as: 'Menu',
-        },
-      ],
-    });
+    let total;
 
+    const totalPoint = await menuOrderCustomers.findAll({});
+
+    //잔여 포인트가 토탈 포인트보다 많을때만 주문 가능 이거 일어나서 구현하기(if)
     //근데 생각해보니까 그 메뉴가 몇개 주문됐는지도 확인해야함 ^^
     return totalPoint;
   };

@@ -2,30 +2,28 @@ const StoresRepository = require('../repositories/stores.repository');
 
 class StoresService {
   storesRepository = new StoresRepository();
+
+  // 모든 가게 조회
   findStores = async () => {
     try {
-      // 저장소(Repository)에게 데이터를 요청합니다.
       const allStore = await this.storesRepository.findStores();
-      // 비즈니스 로직을 수행한 후 사용자에게 보여줄 데이터를 가공합니다.
-      const stores = allStore.map(post => {
+
+      if (allStore.length === 0) {
         return {
-          storeId: post.storeId,
-          storeName: post.storeName,
-          UserId: post.UserId,
-          createdAt: post.createdAt,
-          updatedAt: post.updatedAt,
+          status: 400,
+          message: '조회 할 가게가 존재하지 않습니다.',
         };
-      });
+      }
+
       return {
         status: 200,
-        message: '모든 가게가 조회되었습니다',
-        stores,
+        message: '모든 가게가 조회되었습니다.',
+        allStore,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
-        message: '가게 조회에 실패했습니다',
+        message: '가게 조회에 실패했습니다.',
       };
     }
   };
@@ -54,48 +52,47 @@ class StoresService {
     }
   };
 
+  // 내 가게 조회 (상세 조회)
   findstore = async storeId => {
     try {
-      const store = await this.storesRepository.findStore(storeId);
+      // storeId 값으로 가게 조회
+      const store = await this.storesRepository.findStore(storeId); // findStore로 넘어가서 새로 수정
 
       if (!store) {
         return {
           status: 404,
-          message: '사장님의 가게가 존재하지 않습니다',
+          message: '조회하신 가게가 존재하지 않습니다.',
         };
       }
-      const stores = {
-        storeId: store.null,
-        UserId: store.UserId,
-        storeName: store.storeName,
-        createdAt: store.createdAt,
-        updatedAt: store.updatedAt,
-      };
+
       return {
         status: 200,
-        message: '사장님의 가게가 조회되었습니다',
-        stores,
+        message: '사장님의 가게가 조회되었습니다.',
+        store,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
-        message: '가게 조회에 실패했습니다',
+        message: '가게 조회에 실패했습니다.',
       };
     }
   };
 
+  // 가게 생성
   createStore = async (userId, storeName) => {
     try {
-      const store = await this.storesRepository.findStore(userId);
+      // 현재 로그인한 userId값으로 가게 존재 유무 확인
+      // 생성할 때 storeId 값을 안받아오기 때문에 userId값으로 가게 존재 유무 확인
+      const store = await this.storesRepository.findOneStore(userId);
 
       if (store != null) {
         return {
           status: 404,
-          message: '사장님의 가게가 이미 존재합니다',
+          message: '사장님의 가게가 이미 존재합니다.',
         };
       }
 
+      // 새로운 가게 생성
       const newstore = await this.storesRepository.createStore(
         userId,
         storeName
@@ -103,14 +100,13 @@ class StoresService {
 
       return {
         status: 200,
-        message: '사장님의 가게가 새로 생성되었습니다',
+        message: '사장님의 가게가 새로 생성되었습니다.',
         newstore,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
-        message: '가게 생성에 실패하였습니다',
+        message: '가게 생성에 실패하였습니다.',
       };
     }
   };
@@ -120,52 +116,69 @@ class StoresService {
       if (!storeName) {
         return {
           status: 400,
-          message: '변경 할 가게 이름의 형식이 일치하지 않습니다',
+          message: '가게 이름을 작성해주세요.',
         };
       }
-      const store = await this.storesRepository.findStore(userId);
+
+      // storeId 값으로 가게 조회
+      const store = await this.storesRepository.findStore(storeId);
 
       if (!store) {
         return {
           status: 401,
-          message: '가게 이름을 수정할 권한이 없습니다',
+          message: '사장님의 가게를 찾을 수 없습니다.',
+        };
+      }
+      if (store.UserId !== userId) {
+        return {
+          status: 401,
+          message: '가게 이름 수정 권한이 없습니다.',
         };
       }
 
-      //저장소에게 데이터 요청
-      await this.storesRepository.updatestore(storeId, storeName);
+      await this.storesRepository.updateStore(storeId, storeName);
       return {
         status: 201,
-        message: '가게 이름 수정에 성공했습니다',
+        message: '가게 이름 수정에 성공했습니다.',
       };
     } catch (error) {
       console.log(error);
       return {
         status: 400,
-        message: '가게 이름 수정에 실패했습니다',
+        message: '가게 이름 수정에 실패했습니다.',
       };
     }
   };
 
+  // 가게 삭제
   deleteStore = async (storeId, userId) => {
     try {
+      // storeId 값으로 가게 조회
       const store = await this.storesRepository.findStore(storeId);
+
+      if (!store) {
+        return {
+          status: 401,
+          message: '사장님의 가게를 찾을 수 없습니다.',
+        };
+      }
       if (store.UserId !== userId) {
         return {
           status: 403,
-          message: '가게 삭제 권한이 없습니다',
+          message: '가게 삭제 권한이 없습니다.',
         };
       }
+
       await this.storesRepository.deleteStore(storeId);
       return {
         status: 201,
-        message: '가게 삭제에 성공했습니다',
+        message: '가게 삭제에 성공했습니다.',
       };
     } catch (error) {
       console.log(error);
       return {
         status: 401,
-        message: '가게가 정상적으로 삭제되지 않았습니다',
+        message: '가게 삭제에 실패하였습니다.',
       };
     }
   };

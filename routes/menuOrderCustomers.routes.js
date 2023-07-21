@@ -1,32 +1,34 @@
-// 장바구니에 상품 담는 로직
-
 const express = require('express');
 const router = express.Router();
-const MenuOrderCustomersController = require('../controllers/menuOrderCustomers.controller');
 const authMiddleware = require('../middlewares/auth-middleware');
+
+const MenuOrderCustomersController = require('../controllers/menuOrderCustomers.controller');
 const menuOrdercustomersController = new MenuOrderCustomersController();
 
-// 주문 내역을 모두 불러오는 행동(전체조회)
-router.get('/:storeId', authMiddleware, menuOrdercustomersController.getorder);
+// 고객 본인 장바구니 조회
+router.get(
+  '/:storeId/menuOrder/guest',
+  authMiddleware,
+  menuOrdercustomersController.getOrderUser
+);
 
-// 주문내역 상세조회
-
-// 장바구니에 담는 행동
+// 장바구니 담기
 router.post(
-  '/:storeId',
+  '/:storeId/menuOrder',
   authMiddleware,
   menuOrdercustomersController.postorder
 );
 
+// 장바구니 삭제
 router.delete(
-  '/:storeId',
+  '/:storeId/menuOrder',
   authMiddleware,
   menuOrdercustomersController.deleteorder
 );
 
-// +, - 판별
+// 장바구니 메뉴 갯수 추가, 감소
 router.put(
-  '/sign/:storeId',
+  '/:storeId/menuOrder/sign',
   authMiddleware,
   menuOrdercustomersController.signAmount
 );
