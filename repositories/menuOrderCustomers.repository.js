@@ -10,6 +10,7 @@ class CustomerOrderRepository {
   // 고객 본인 장바구니 조회
   userAll = async (userId, storeId) => {
     const findorder = await menuOrderCustomers.findAll({
+      where: { UserId: userId },
       include: [
         {
           model: Menus,
@@ -21,7 +22,7 @@ class CustomerOrderRepository {
             'menuPoint',
           ],
           as: 'Menu',
-          where: { [Op.and]: [{ UserId: userId }, { StoreId: storeId }] },
+          where: { StoreId: storeId },
         },
       ],
     });

@@ -5,7 +5,6 @@ const CustomerOrderRepository = require('../repositories/menuOrderCustomers.repo
 class CustomerOrderService {
   customerOrderRepository = new CustomerOrderRepository();
 
-  // 고객 본인 장바구니 조회
   getOrderUser = async (userId, storeId, menuId) => {
     try {
       const orders = await this.customerOrderRepository.userAll(
