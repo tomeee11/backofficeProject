@@ -45,11 +45,10 @@ class StoresController {
     const { storeId } = req.params;
     const { storeName } = req.body;
     const { userId } = res.locals.user;
-
     const { status, message } = await this.storesService.updatestore(
       storeId,
-      userId,
-      storeName
+      storeName,
+      userId
     );
     res.status(status).json({ message });
   };

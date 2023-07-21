@@ -1,5 +1,6 @@
 const { Sequelize } = require('sequelize');
 const { Stores } = require('../models');
+const { Op } = require('sequelize');
 
 class StoresRepository {
   // 모든 가게 조회
@@ -13,7 +14,6 @@ class StoresRepository {
   // 내 가게 조회 (상세 조회)
   findStore = async storeId => {
     const store = await Stores.findOne({ where: { storeId } });
-    console.log(store);
     return store;
   };
 
@@ -40,6 +40,7 @@ class StoresRepository {
 
   // 현재 로그인한 userId값으로 가게 존재 유무 확인
   findOneStore = async userId => {
+    console.log(userId);
     const stores = await Stores.findOne({ where: { UserId: userId } });
     return stores;
   };
