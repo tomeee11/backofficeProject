@@ -54,7 +54,7 @@ class CustomerOrderService {
       // menuId 값으로 메뉴 존재 유무 조회
       const menu = await this.customerOrderRepository.getMenu(menuId);
 
-      if (menuId !== menu.menuId) {
+      if (!menu) {
         return {
           status: 400,
           message: '존재하지 않는 메뉴 입니다.',

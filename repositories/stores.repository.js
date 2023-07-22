@@ -40,9 +40,9 @@ class StoresRepository {
 
   // 현재 로그인한 userId값으로 가게 존재 유무 확인
   findOneStore = async userId => {
-    console.log(userId);
-    const stores = await Stores.findOne({ where: { UserId: userId } });
-    return stores;
+    const store = await Stores.findOne({ where: { UserId: userId } });
+    console.log(store);
+    return store;
   };
 
   // 가게 이름 수정

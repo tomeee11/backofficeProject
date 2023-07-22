@@ -11,7 +11,7 @@ router.get('/stores', storesController.findStores);
 
 // 내 가게 조회
 router.get(
-  '/store/:storeId',
+  '/:storeId',
   authMiddleware,
   roleMiddleware,
   storesController.getStore
@@ -30,7 +30,7 @@ router.post(
 
 // 가게 이름 수정
 router.put(
-  '/store/:storeId',
+  '/:storeId',
   authMiddleware,
   roleMiddleware,
   storesController.updatestore
@@ -38,7 +38,7 @@ router.put(
 
 // 가게 삭제
 router.delete(
-  '/store/:storeId',
+  '/:storeId',
   authMiddleware,
   roleMiddleware,
   storesController.deleteStore
