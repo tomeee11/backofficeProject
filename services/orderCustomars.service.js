@@ -3,48 +3,46 @@ const OrderCustomarsRepository = require('../repositories/orderCustomars.reposit
 class orderCustomarsService {
   orderCustomarsRepository = new OrderCustomarsRepository();
 
-  postOrder = async (storeId, menuorderId, userId, menuId) => {
+  postOrder = async (storeId, menuorderId, userId) => {
     try {
-      //주문 하기 전에 잔여 포인트가 토탈 포인트보다 많은지 확인을 우선적으로 해줘야함
-      //내 포인트
-      const getPoint = await this.orderCustomarsRepository.getPoint(userId);
-      //현재 장바구니 안에 들어가 있는 메뉴들의 총 가격
-      const getTotalPoint = await this.orderCustomarsRepository.getTotalPoint();
+      // 메뉴 테이블의 메뉴 포인트
+      const menuPoints = await this.orderCustomarsRepository.getMenuPoint(
+        userId,
+        storeId
+      );
+      // 고객의 현재 포인트 조회
+      const custoMeruserPoint = await this.orderCustomarsRepository.getPoint(
+        userId
+      );
 
-      console.log('@@@@@@@@' + getTotalPoint);
-      let totalPoint;
-      getTotalPoint.map(a => {
-        totalPoint += a.Menu.menuPoint;
-      });
-      console.log('@@@@' + totalPoint);
-
-      if (getPoint.point < totalPoint) {
-        return {
-          status: 405,
-          message: '잔액이 부족합니다',
-        };
-      }
-      //후에 주문 완료
+      const transactionUpdate = await this.orderCustomarsRepository.updatepoint(
+        custoMeruserPoint,
+        menuPoints,
+        userId,
+        storeId
+      );
+      console.log(transactionUpdate);
       const order = await this.orderCustomarsRepository.postOrder();
       const ordercustomerId = order.ordercustomerId;
+
       const putOrdercustomerId =
         await this.orderCustomarsRepository.putOrdercustomerId(
           menuorderId,
           ordercustomerId
         );
+
       return {
         status: 200,
         message: '주문이 완료되었습니다',
       };
     } catch (error) {
-      console.log(error);
+      console.log('@@@@@------', error);
       return {
-        status: 400,
-        message: '주문이 정상적으로 처리되지 않았습니다',
+        status: 500,
+        message: '고객님의 point를 차감하는 도중 문제가 생겼습니다 ',
       };
     }
   };
-
   getOrder = async (storeId, ordercustomarId) => {
     try {
       const orders = await this.orderCustomarsRepository.getOrder(
@@ -52,7 +50,7 @@ class orderCustomarsService {
       );
       return {
         status: 200,
-        message: '장바구니 내역을 가져왔습니다',
+        message: orders,
       };
     } catch (error) {
       console.log(error);
@@ -62,8 +60,9 @@ class orderCustomarsService {
       };
     }
   };
+
   //사장이 주문 완료
-  updateState = async (storeId, ordercustomerId) => {
+  updateState = async (storeId, ordercustomerId, userId, menuId) => {
     try {
       const findOne = await this.orderCustomarsRepository.findState(
         ordercustomerId

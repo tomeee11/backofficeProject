@@ -92,6 +92,13 @@ class StoresService {
         };
       }
 
+      if (store.storeName !== storeName) {
+        return {
+          status: 401,
+          message: '동일한 가게 이름이 존재합니다.',
+        };
+      }
+
       // 새로운 가게 생성
       const newstore = await this.storesRepository.createStore(
         userId,
@@ -111,7 +118,7 @@ class StoresService {
     }
   };
 
-  updatestore = async (storeId, userId, storeName) => {
+  updatestore = async (storeId, storeName, userId) => {
     try {
       if (!storeName) {
         return {
@@ -122,7 +129,6 @@ class StoresService {
 
       // storeId 값으로 가게 조회
       const store = await this.storesRepository.findStore(storeId);
-
       if (!store) {
         return {
           status: 401,
@@ -135,6 +141,12 @@ class StoresService {
           message: '가게 이름 수정 권한이 없습니다.',
         };
       }
+      if (store.storeName !== storeName) {
+        return {
+          status: 401,
+          message: '동일한 가게 이름이 존재합니다.',
+        };
+      }
 
       await this.storesRepository.updateStore(storeId, storeName);
       return {
@@ -142,7 +154,6 @@ class StoresService {
         message: '가게 이름 수정에 성공했습니다.',
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
         message: '가게 이름 수정에 실패했습니다.',

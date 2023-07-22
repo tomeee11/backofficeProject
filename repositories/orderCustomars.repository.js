@@ -2,25 +2,116 @@ const {
   OrderCustomers,
   menuOrderCustomers,
   Menus,
+  Stores,
   Users,
 } = require('../models');
+const { sequelize } = require('../models');
 
 class orderCustomarsRepository {
+  // 유저포인트값 조회
   getPoint = async userId => {
-    const point = await Users.findOne({
-      where: { userId },
+    const user = await Users.findOne({
+      where: {
+        userId,
+      },
     });
-    return point;
+    return user.point;
+  };
+  // 메뉴포인트값 조회
+  getMenuPoint = async (userId, storeId) => {
+    const menu = await menuOrderCustomers.findAll({
+      where: { UserId: userId },
+      include: [
+        {
+          model: Menus,
+          attributes: ['menuPoint'],
+          where: { storeId: storeId },
+          as: 'Menu',
+        },
+      ],
+    });
+
+    const totalPoint = menu.reduce((acc, item) => acc + item.Menu.menuPoint, 0);
+
+    return totalPoint;
   };
 
-  getTotalPoint = async () => {
-    let total;
+  getAdminPoint = async userId => {
+    const user = await Users.findOne({
+      where: { userId },
+    });
+    return user.point;
+  };
 
-    const totalPoint = await menuOrderCustomers.findAll({});
+  updatepoint = async (custoMeruserPoint, menuPoints, userId, storeId) => {
+    try {
+      await sequelize.transaction(async t => {
+        if (custoMeruserPoint >= menuPoints) {
+          const usermenupoint = custoMeruserPoint - menuPoints;
 
-    //잔여 포인트가 토탈 포인트보다 많을때만 주문 가능 이거 일어나서 구현하기(if)
-    //근데 생각해보니까 그 메뉴가 몇개 주문됐는지도 확인해야함 ^^
-    return totalPoint;
+          const ppoint = await Users.update(
+            {
+              point: usermenupoint,
+            },
+            { where: { userId } },
+            { transaction: t }
+          );
+
+          //사장님의 point 가져오기
+          const adminUser = await Users.findOne({
+            include: [
+              {
+                model: Stores,
+                where: { storeId },
+              },
+            ],
+          });
+
+          const adminPoint = adminUser.point;
+
+          // 사장님 포인트 지급
+          const addpoint = adminPoint + menuPoints;
+          await Users.update(
+            {
+              point: addpoint,
+            },
+            { where: { userId: adminUser.userId } },
+            { transaction: t }
+          );
+          return ppoint;
+        }
+      });
+    } catch (Error) {
+      console.log(Error);
+      throw Error;
+    }
+  };
+
+  getAdminPoint = async userId => {
+    const user = await Users.findOne({
+      where: {
+        userId,
+      },
+    });
+    return user.point;
+  };
+
+  updatedPoint = async (userId, menuId, updatedPoint) => {
+    const updatepoint = await Users.update(
+      {
+        point: updatedPoint,
+      },
+      { where: { userId } },
+      {
+        include: [
+          {
+            model: Menus,
+          },
+          { where: { menuId } },
+        ],
+      }
+    );
+    return updatepoint;
   };
 
   postOrder = async () => {

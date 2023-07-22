@@ -44,7 +44,6 @@ class CustomerOrderRepository {
     const menu = await Menus.findOne({
       where: { menuId },
     });
-    console.log(menu.menuId);
     return menu;
   };
 
