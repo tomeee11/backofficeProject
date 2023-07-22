@@ -5,7 +5,7 @@ const roleMiddleware = require('../middlewares/role-middleware');
 const OrdersCustomerController = require('../controllers/orderCustomars.controller');
 const ordersCustomerController = new OrdersCustomerController();
 
-// 손님이 버튼 클릭해서 실제로 주문 완료
+// 손님이 버튼 클릭해서 실제로 주문 완료 (주문완료 API를 호출했을때 유저포인트-메뉴포인트)
 router.post(
   '/store/:storeId/:menuorderId',
   authMiddleware,
