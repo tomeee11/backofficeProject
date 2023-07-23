@@ -44,6 +44,12 @@ class StoresRepository {
     return store;
   };
 
+  // 가게 이름 중복 검사를 위해 가게 이름으로 조회
+  findStoreName = async storeName => {
+    const findstoreName = await Stores.findOne({ where: { storeName } });
+    return findstoreName;
+  };
+
   // 가게 이름 수정
   updateStore = async (storeId, storeName) => {
     await Stores.update({ storeName }, { where: { storeId } });
