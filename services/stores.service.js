@@ -91,6 +91,7 @@ class StoresService {
         };
       }
 
+      // 작동 불가
       // if (store.storeName !== storeName) {
       //   return {
       //     status: 401,
@@ -140,12 +141,12 @@ class StoresService {
           message: '가게 이름 수정 권한이 없습니다.',
         };
       }
-      // if (store.storeName !== storeName) {
-      //   return {
-      //     status: 401,
-      //     message: '동일한 가게 이름이 존재합니다.',
-      //   };
-      // }
+      if (store.storeName === storeName) {
+        return {
+          status: 401,
+          message: '동일한 가게 이름이 존재합니다.',
+        };
+      }
 
       await this.storesRepository.updateStore(storeId, storeName);
       return {
