@@ -5,7 +5,7 @@ const ReviewController = require('../controllers/reviews.controller');
 const reviewController = new ReviewController();
 
 // 리뷰 조회
-router.get('/store/reviews', reviewController.AllReview);
+router.get('/store/:storeId/reviews', reviewController.AllReview);
 // 리뷰 작성
 router.post(
   '/store/:storeId/review',

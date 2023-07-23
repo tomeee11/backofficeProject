@@ -2,8 +2,9 @@ const { Users, Reviews, Stores } = require('../models');
 
 class ReviewRepository {
   // 전체 리뷰 조회
-  findAllReview = async () => {
+  findAllReview = async storeId => {
     const reviews = await Reviews.findAll({
+      where: { storeId },
       include: [
         {
           model: Users,
