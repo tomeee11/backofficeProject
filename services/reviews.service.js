@@ -44,7 +44,6 @@ class ReviewService {
         allReviews,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
         message: '모든 리뷰 조회 중 오류가 발생하였습니다.',

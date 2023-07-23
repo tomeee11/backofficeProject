@@ -21,22 +21,19 @@ class orderCustomarsService {
         userId,
         storeId
       );
-      console.log(transactionUpdate);
       const order = await this.orderCustomarsRepository.postOrder();
       const ordercustomerId = order.ordercustomerId;
 
-      const putOrdercustomerId =
-        await this.orderCustomarsRepository.putOrdercustomerId(
-          menuorderId,
-          ordercustomerId
-        );
+      await this.orderCustomarsRepository.putOrdercustomerId(
+        menuorderId,
+        ordercustomerId
+      );
 
       return {
         status: 200,
         message: '주문이 완료되었습니다',
       };
     } catch (error) {
-      console.log('@@@@@------', error);
       return {
         status: 500,
         message: '고객님의 point를 차감하는 도중 문제가 생겼습니다 ',
@@ -53,7 +50,6 @@ class orderCustomarsService {
         message: orders,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
         message: '장바구니 내역을 가져오지 못했습니다',
@@ -83,7 +79,6 @@ class orderCustomarsService {
         message: '배달이 완료되었습니다',
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
         message: '배달 완료가 비정상적으로 종료되었습니다',

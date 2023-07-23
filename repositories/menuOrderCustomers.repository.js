@@ -50,7 +50,6 @@ class CustomerOrderRepository {
   // 가게 유무 조회
   findStore = async storeId => {
     const store = await Stores.findOne({ where: { storeId } });
-    console.log(store.storeId);
     return store;
   };
 

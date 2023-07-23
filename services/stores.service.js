@@ -44,7 +44,6 @@ class StoresService {
         stores: as,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
         message: '키워드 검색에 실패하였습니다',
@@ -80,12 +79,10 @@ class StoresService {
 
   // 가게 생성
   createStore = async (userId, storeName) => {
-    console.log(userId);
     try {
       // 현재 로그인한 userId값으로 가게 존재 유무 확인
       // 생성할 때 storeId 값을 안받아오기 때문에 userId값으로 가게 존재 유무 확인
       const store = await this.storesRepository.findOneStore(userId);
-      console.log(store);
 
       if (store != null) {
         return {
@@ -113,7 +110,6 @@ class StoresService {
         newstore,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
         message: '가게 생성에 실패하였습니다.',
@@ -189,7 +185,6 @@ class StoresService {
         message: '가게 삭제에 성공했습니다.',
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 401,
         message: '가게 삭제에 실패하였습니다.',

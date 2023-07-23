@@ -67,7 +67,6 @@ class CustomerOrderService {
         message: '장바구니에 담겼습니다.',
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
         message: '장바구니에 담는 도중 오류가 발생하였습니다.',
