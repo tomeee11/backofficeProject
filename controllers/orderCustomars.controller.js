@@ -16,7 +16,6 @@ class orderCustomarsController {
       menuorderId,
       userId
     );
-    console.log(status);
     res.status(status).json({ message });
   };
 

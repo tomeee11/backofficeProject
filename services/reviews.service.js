@@ -4,9 +4,19 @@ class ReviewService {
   reviewRepository = new ReviewRepository();
 
   // 리뷰 전체 조회
-  findAllReview = async () => {
+  findAllReview = async storeId => {
     try {
-      const allReview = await this.reviewRepository.findAllReview();
+      // storeId로 가게 존재 유무 조회
+      const store = await this.reviewRepository.findStoreId(storeId);
+
+      if (!store) {
+        return {
+          status: 400,
+          message: '가게를 찾을 수 없습니다.',
+        };
+      }
+
+      const allReview = await this.reviewRepository.findAllReview(storeId);
 
       const allReviews = allReview.map(reviews => {
         return {
@@ -34,7 +44,6 @@ class ReviewService {
         allReviews,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
         message: '모든 리뷰 조회 중 오류가 발생하였습니다.',

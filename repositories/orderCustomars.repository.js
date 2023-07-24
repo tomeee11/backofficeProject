@@ -82,7 +82,6 @@ class orderCustomarsRepository {
         }
       });
     } catch (Error) {
-      console.log(Error);
       throw Error;
     }
   };

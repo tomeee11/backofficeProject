@@ -21,7 +21,6 @@ class MenusService {
         message: findAllMenus,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
         message: '메뉴 조회에 실패하였습니다.',

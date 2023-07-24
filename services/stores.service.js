@@ -44,7 +44,6 @@ class StoresService {
         stores: as,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
         message: '키워드 검색에 실패하였습니다',
@@ -80,12 +79,14 @@ class StoresService {
 
   // 가게 생성
   createStore = async (userId, storeName) => {
-    console.log(userId);
     try {
       // 현재 로그인한 userId값으로 가게 존재 유무 확인
       // 생성할 때 storeId 값을 안받아오기 때문에 userId값으로 가게 존재 유무 확인
       const store = await this.storesRepository.findOneStore(userId);
-      console.log(store);
+      // 가게 이름 중복 검사를 위해 가게 이름으로 조회
+      const findStoreName = await this.storesRepository.findStoreName(
+        storeName
+      );
 
       if (store != null) {
         return {
@@ -93,13 +94,12 @@ class StoresService {
           message: '사장님의 가게가 이미 존재합니다.',
         };
       }
-
-      // if (store.storeName !== storeName) {
-      //   return {
-      //     status: 401,
-      //     message: '동일한 가게 이름이 존재합니다.',
-      //   };
-      // }
+      if (findStoreName.storeName === storeName) {
+        return {
+          status: 401,
+          message: '동일한 가게 이름이 존재합니다.',
+        };
+      }
 
       // 새로운 가게 생성
       const newstore = await this.storesRepository.createStore(
@@ -113,7 +113,6 @@ class StoresService {
         newstore,
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 400,
         message: '가게 생성에 실패하였습니다.',
@@ -144,12 +143,12 @@ class StoresService {
           message: '가게 이름 수정 권한이 없습니다.',
         };
       }
-      // if (store.storeName !== storeName) {
-      //   return {
-      //     status: 401,
-      //     message: '동일한 가게 이름이 존재합니다.',
-      //   };
-      // }
+      if (store.storeName === storeName) {
+        return {
+          status: 401,
+          message: '동일한 가게 이름이 존재합니다.',
+        };
+      }
 
       await this.storesRepository.updateStore(storeId, storeName);
       return {
@@ -189,7 +188,6 @@ class StoresService {
         message: '가게 삭제에 성공했습니다.',
       };
     } catch (error) {
-      console.log(error);
       return {
         status: 401,
         message: '가게 삭제에 실패하였습니다.',

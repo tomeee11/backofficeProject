@@ -41,8 +41,13 @@ class StoresRepository {
   // 현재 로그인한 userId값으로 가게 존재 유무 확인
   findOneStore = async userId => {
     const store = await Stores.findOne({ where: { UserId: userId } });
-    console.log(store);
     return store;
+  };
+
+  // 가게 이름 중복 검사를 위해 가게 이름으로 조회
+  findStoreName = async storeName => {
+    const findstoreName = await Stores.findOne({ where: { storeName } });
+    return findstoreName;
   };
 
   // 가게 이름 수정

@@ -5,8 +5,9 @@ class ReviewController {
 
   // 리뷰 전체 조회
   AllReview = async (req, res, next) => {
+    const { storeId } = req.params;
     const { status, message, allReviews } =
-      await this.reviewService.findAllReview();
+      await this.reviewService.findAllReview(storeId);
 
     res.status(status).json({ message, allReviews });
   };
